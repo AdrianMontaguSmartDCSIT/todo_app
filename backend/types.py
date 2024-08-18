@@ -11,6 +11,11 @@ class NewTodoCategory(BaseModel):
 
 
 class UpdateTodoItem(BaseModel):
+    id: str
     category: str
-    old_item: str
     new_item: str
+
+
+class DeleteTodoItem(BaseModel):
+    id: str
+    category: str

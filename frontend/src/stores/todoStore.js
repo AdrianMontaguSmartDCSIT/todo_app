@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import todoApiService from '../services/api.todoService'
 
-
 export const useTodoStore = defineStore('todo', {
   state: () => ({
     todoList: {}
@@ -14,9 +13,25 @@ export const useTodoStore = defineStore('todo', {
         throw error
       }
     },
-    createTodo () {},
-    updateTodo () {},
-    deleteTodo () {},
-    createTodoCategory () {}
+    async createTodo (data) {
+      try {
+        const response = await todoApiService.post(data)
+        this.todoList[data['category']].push(data['item'])
+        console.log(response.message)
+      } catch (error) {
+        throw error
+      }
+    },
+    async updateTodo (data) {
+      try {
+        const response = await todoApiService.put(data)
+        // TODO 
+        console.log(response.message)
+      } catch (error) {
+        throw error
+      }
+    },
+    async deleteTodo (data) {},
+    async createTodoCategory (data) {}
   }
 })

@@ -1,10 +1,12 @@
 """Module for basic CRUD for a todo app."""
 
 from flask import Flask, jsonify, request, Response
+from flask_cors import CORS
 
 from backend.types import TodoItem, NewTodoCategory, UpdateTodoItem
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 TODO_LIST: dict[str, list[str]] = {}
 

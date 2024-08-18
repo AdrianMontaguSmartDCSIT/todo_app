@@ -1,5 +1,5 @@
 
-const API_URL = 'http://localhost:5000/api/todos'
+const API_URL = 'http://127.0.0.1:5000/api/todos'
 
 const todoApiService = {
   // Helper function to handle responses
@@ -17,8 +17,8 @@ const todoApiService = {
       const response = await fetch(API_URL)
       return this.handleResponse(response)
     } catch (error) {
-      console.error('API GET Error:', error)
-      throw error
+        console.error('API GET Error:', error)
+        throw error
     }
   },
 

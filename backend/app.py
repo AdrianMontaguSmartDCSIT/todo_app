@@ -80,11 +80,19 @@ def create_todo_item() -> tuple[Response, int]:
                 409,
             )
 
-        data = dict(id=uuid.uuid4(), name=new_item)
+        item = dict(id=uuid.uuid4(), name=new_item)
 
-        TODO_LIST[category].append(data)
+        TODO_LIST[category].append(item)
 
-        return jsonify({"message": f"{new_item} was added successfully."}), 200
+        return (
+            jsonify(
+                {
+                    "item": item,
+                    "message": f"{new_item} was added successfully.",
+                }
+            ),
+            200,
+        )
     except ValueError as e:
         print(f"A valuerror occured - {e}")
         return (
@@ -145,8 +153,11 @@ def update_todo_item() -> tuple[Response, int]:
                 return (
                     jsonify(
                         {
+                            "id": id,
+                            "category": category,
+                            "item": new_item,
                             "message": f"{old_item} was updated to "
-                            f"{new_item} successfully."
+                            f"{new_item} successfully.",
                         }
                     ),
                     200,
@@ -282,7 +293,12 @@ def create_todo_category() -> tuple[Response, int]:
         TODO_LIST[category] = []
 
         return (
-            jsonify({"message": f"{category} was created successfully."}),
+            jsonify(
+                {
+                    "category": category,
+                    "message": f"{category} was created successfully.",
+                }
+            ),
             200,
         )
     except ValueError as e:

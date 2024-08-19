@@ -1,7 +1,6 @@
+const API_URL = 'http://127.0.0.1:5000/api/'
 
-const API_URL = 'http://127.0.0.1:5000/api/todos'
-
-const todoApiService = {
+const apiService = {
   // Helper function to handle responses
   async handleResponse (response) {
     if (!response.ok) {
@@ -12,20 +11,20 @@ const todoApiService = {
   },
 
   // GET request
-  async get () {
+  async get (endpoint) {
     try {
-      const response = await fetch(API_URL)
+      const response = await fetch(`${API_URL}/${endpoint}`)
       return this.handleResponse(response)
     } catch (error) {
-        console.error('API GET Error:', error)
-        throw error
+      console.error('API GET Error:', error)
+      throw error
     }
   },
 
   // POST request
-  async post (data) {
+  async post (endpoint, data) {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,9 +39,9 @@ const todoApiService = {
   },
 
   // PUT request
-  async put (data) {
+  async put (endpoint, data) {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -57,9 +56,9 @@ const todoApiService = {
   },
 
   // DELETE request
-  async delete (data) {
+  async delete (endpoint, data) {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -74,4 +73,4 @@ const todoApiService = {
   }
 }
 
-export default todoApiService
+export default apiService

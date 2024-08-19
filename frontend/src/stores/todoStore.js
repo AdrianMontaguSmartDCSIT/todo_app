@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import todoApiService from '../services/api.todoService'
+import apiService from '../services/api.service'
 
 export const useTodoStore = defineStore('todo', {
   state: () => ({
@@ -8,15 +8,15 @@ export const useTodoStore = defineStore('todo', {
   actions: {
     async fetchTodoListItems () {
       try {
-        this.items = await todoApiService.get()
+        this.todoList = await apiService.get('todos')
       } catch (error) {
         throw error
       }
     },
     async createTodo (data) {
       try {
-        const response = await todoApiService.post(data)
-        this.todoList[data['category']].push(data['item'])
+        const response = await todoApiService.post('todos/item', data)
+        this.todoList[data['category']].push(response.item)
         console.log(response.message)
       } catch (error) {
         throw error
@@ -24,14 +24,45 @@ export const useTodoStore = defineStore('todo', {
     },
     async updateTodo (data) {
       try {
-        const response = await todoApiService.put(data)
-        // TODO 
+        const response = await todoApiService.put('todos/item', data)
+        const id = response.id
+        const name = response.item
+        const category = response.category
+        this.todoList[category] = this.todoList[category].map(item => {
+          if (item.id === id) {
+            return { ...item, name: name }
+          } else {
+            return item
+          }
+        })
+
         console.log(response.message)
       } catch (error) {
         throw error
       }
     },
-    async deleteTodo (data) {},
-    async createTodoCategory (data) {}
+    async deleteTodo (data) {
+      try {
+        const response = await todoApiService.delete('todos/item', data)
+
+        this.todoList[data.category] = this.todoList[data.category].filter(
+          item => item.id != data.id
+        )
+        console.log(response.message)
+      } catch (error) {
+        throw error
+      }
+    },
+    async createTodoCategory (data) {
+      try {
+        const response = await todoApiService.delete('todos/category', data)
+
+        this.todoList[response.category] = []
+
+        console.log(response.message)
+      } catch (error) {
+        throw error
+      }
+    }
   }
 })

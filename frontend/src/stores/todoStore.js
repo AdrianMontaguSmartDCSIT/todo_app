@@ -15,7 +15,7 @@ export const useTodoStore = defineStore('todo', {
     },
     async createTodo (data) {
       try {
-        const response = await todoApiService.post('todos/item', data)
+        const response = await apiService.post('todos/item', data)
         this.todoList[data['category']].push(response.item)
         console.log(response.message)
       } catch (error) {
@@ -24,7 +24,7 @@ export const useTodoStore = defineStore('todo', {
     },
     async updateTodo (data) {
       try {
-        const response = await todoApiService.put('todos/item', data)
+        const response = await apiService.put('todos/item', data)
         const id = response.id
         const name = response.item
         const category = response.category
@@ -43,7 +43,7 @@ export const useTodoStore = defineStore('todo', {
     },
     async deleteTodo (data) {
       try {
-        const response = await todoApiService.delete('todos/item', data)
+        const response = await apiService.delete('todos/item', data)
 
         this.todoList[data.category] = this.todoList[data.category].filter(
           item => item.id != data.id
@@ -55,7 +55,7 @@ export const useTodoStore = defineStore('todo', {
     },
     async createTodoCategory (data) {
       try {
-        const response = await todoApiService.delete('todos/category', data)
+        const response = await apiService.delete('todos/category', data)
 
         this.todoList[response.category] = []
 

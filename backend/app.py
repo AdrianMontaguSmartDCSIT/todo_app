@@ -15,7 +15,7 @@ from backend.types import (
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-TODO_LIST: dict[str, list[dict[str, str]]] = {}
+TODO_LIST: dict[str, list[dict[str, str]]] = {"shopping": []}
 
 
 @app.route("/")
@@ -36,7 +36,7 @@ def get_todos() -> tuple[Response, int]:
     except Exception:
         return (
             jsonify(
-                {"error": "An error occurred while processing your request."}
+                {"message": "An error occurred while processing your request."}
             ),
             500,
         )
@@ -64,19 +64,19 @@ def create_todo_item() -> tuple[Response, int]:
 
         if check_empty_string(category, new_item):
             return (
-                jsonify({"error": "Items must not be blank."}),
+                jsonify({"message": "Items must not be blank."}),
                 400,
             )
 
-        if not TODO_LIST.get(category):
+        if category not in TODO_LIST:
             return (
-                jsonify({"error": f"Category {category} does not exist."}),
+                jsonify({"message": f"Category {category} does not exist."}),
                 404,
             )
 
         if new_item in TODO_LIST[category]:
             return (
-                jsonify({"error": f"Item {new_item} already exists."}),
+                jsonify({"message": f"Item {new_item} already exists."}),
                 409,
             )
 
@@ -97,7 +97,7 @@ def create_todo_item() -> tuple[Response, int]:
         print(f"A valuerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid data format. Please check your input."}
+                {"message": "Invalid data format. Please check your input."}
             ),
             400,
         )
@@ -105,7 +105,7 @@ def create_todo_item() -> tuple[Response, int]:
         print(f"A keyerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid request format. Please check your input."}
+                {"message": "Invalid request format. Please check your input."}
             ),
             400,
         )
@@ -113,7 +113,7 @@ def create_todo_item() -> tuple[Response, int]:
         print(f"An error occured - {e}")
         return (
             jsonify(
-                {"error": "An error occurred while processing your request."}
+                {"message": "An error occurred while processing your request."}
             ),
             500,
         )
@@ -135,13 +135,13 @@ def update_todo_item() -> tuple[Response, int]:
 
         if check_empty_string(category, id, new_item):
             return (
-                jsonify({"error": "Items must not be blank."}),
+                jsonify({"message": "Items must not be blank."}),
                 400,
             )
 
-        if not TODO_LIST.get(category):
+        if category not in TODO_LIST:
             return (
-                jsonify({"error": f"Category {category} does not exist."}),
+                jsonify({"message": f"Category {category} does not exist."}),
                 404,
             )
 
@@ -163,12 +163,12 @@ def update_todo_item() -> tuple[Response, int]:
                     200,
                 )
 
-        return jsonify({"error": f"{old_item} was not found."}), 404
+        return jsonify({"message": f"{old_item} was not found."}), 404
     except ValueError as e:
         print(f"A valuerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid data format. Please check your input."}
+                {"message": "Invalid data format. Please check your input."}
             ),
             400,
         )
@@ -176,7 +176,7 @@ def update_todo_item() -> tuple[Response, int]:
         print(f"A keyerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid request format. Please check your input."}
+                {"message": "Invalid request format. Please check your input."}
             ),
             400,
         )
@@ -184,7 +184,7 @@ def update_todo_item() -> tuple[Response, int]:
         print(f"An error occured - {e}")
         return (
             jsonify(
-                {"error": "An error occurred while processing your request."}
+                {"message": "An error occurred while processing your request."}
             ),
             500,
         )
@@ -215,13 +215,13 @@ def delete_todo_item() -> tuple[Response, int]:
 
         if check_empty_string(category, id):
             return (
-                jsonify({"error": "Items must not be blank."}),
+                jsonify({"message": "Items must not be blank."}),
                 400,
             )
 
-        if not TODO_LIST.get(category):
+        if category not in TODO_LIST:
             return (
-                jsonify({"error": f"Category {category} does not exist."}),
+                jsonify({"message": f"Category {category} does not exist."}),
                 404,
             )
         original_length = len(TODO_LIST[category])
@@ -239,12 +239,12 @@ def delete_todo_item() -> tuple[Response, int]:
                 200,
             )
 
-        return jsonify({"error": f"{item_to_delete} was not found."}), 404
+        return jsonify({"message": f"{item_to_delete} was not found."}), 404
     except ValueError as e:
         print(f"A valuerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid data format. Please check your input."}
+                {"message": "Invalid data format. Please check your input."}
             ),
             400,
         )
@@ -252,7 +252,7 @@ def delete_todo_item() -> tuple[Response, int]:
         print(f"A keyerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid request format. Please check your input."}
+                {"message": "Invalid request format. Please check your input."}
             ),
             400,
         )
@@ -260,7 +260,7 @@ def delete_todo_item() -> tuple[Response, int]:
         print(f"An error occured - {e}")
         return (
             jsonify(
-                {"error": "An error occurred while processing your request."}
+                {"message": "An error occurred while processing your request."}
             ),
             500,
         )
@@ -280,13 +280,13 @@ def create_todo_category() -> tuple[Response, int]:
 
         if check_empty_string(category):
             return (
-                jsonify({"error": "Category must not be blank."}),
+                jsonify({"message": "Category must not be blank."}),
                 400,
             )
 
         if TODO_LIST.get(category):
             return (
-                jsonify({"error": f"Category {category} already exists."}),
+                jsonify({"message": f"Category {category} already exists."}),
                 409,
             )
 
@@ -305,7 +305,7 @@ def create_todo_category() -> tuple[Response, int]:
         print(f"A valuerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid data format. Please check your input."}
+                {"message": "Invalid data format. Please check your input."}
             ),
             400,
         )
@@ -313,7 +313,7 @@ def create_todo_category() -> tuple[Response, int]:
         print(f"A keyerror occured - {e}")
         return (
             jsonify(
-                {"error": "Invalid request format. Please check your input."}
+                {"message": "Invalid request format. Please check your input."}
             ),
             400,
         )
@@ -321,7 +321,7 @@ def create_todo_category() -> tuple[Response, int]:
         print(f"An error occured - {e}")
         return (
             jsonify(
-                {"error": "An error occurred while processing your request."}
+                {"message": "An error occurred while processing your request."}
             ),
             500,
         )
